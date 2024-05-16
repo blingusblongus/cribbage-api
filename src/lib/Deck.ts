@@ -1,9 +1,9 @@
 import { Rank, Suit } from "../types/cardTypes";
-import { getEnumKeyByValue } from "../utils/getEnumKeyByValue";
 import { Card } from "./Card";
 
 export class Deck {
     private _cards: Card[] = [];
+    private _removed: Card[] = [];
 
     constructor() {
         this.seedDeck();
@@ -25,20 +25,15 @@ export class Deck {
         }
     }
 
-    public printCards() {
-        const cards = this._cards.map((card) => {
-            return {
-                rank: getEnumKeyByValue(Rank, card.rank),
-                suit: getEnumKeyByValue(Suit, card.suit),
-                count: card.count(),
-            }
-        })
-
+    public view() {
+        const cards = this._cards.map(card => card.print());
+        const removedCards = this._removed.map(card => card.print());
         const deck = {
             numCards: this._cards.length,
             cards,
+            removedCards
         }
-        return JSON.stringify(deck, null, 2);
+        return deck;
     }
 
     public shuffle() {
@@ -50,8 +45,7 @@ export class Deck {
     }
 
     public removeCard(rank: Rank, suit: Suit) {
-        this._cards = this._cards.filter((card) => {
-            return card.suit !== suit || card.rank !== rank;
-        })
+        const idxToRemove = this._cards.findIndex(card => card.suit === suit && card.rank === rank);
+        this._removed.push(this._cards.splice(idxToRemove, 1)[0]);
     }
 }

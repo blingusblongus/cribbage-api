@@ -6,5 +6,5 @@ export const GET: APIRoute = () => {
     const deck = new Deck();
     // deck.shuffle();
     deck.removeCard(Rank["Ace"], Suit["Spades"])
-    return new Response(deck.printCards());
+    return new Response(JSON.stringify(deck.view()));
 }
