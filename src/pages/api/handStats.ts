@@ -20,6 +20,9 @@ export const GET: APIRoute = (context) => {
         return new Response("Error parsing cards" + err, { status: 400 })
     }
 
+    if (parsedCards.length > 6) {
+        return new Response("Hand size is limited to 6", { status: 400 })
+    }
     // Init Deck
     const deck = new Deck();
 
