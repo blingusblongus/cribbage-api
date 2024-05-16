@@ -5,6 +5,10 @@ export class Deck {
     private _cards: Card[] = [];
     private _removed: Card[] = [];
 
+    public get cards() {
+        return this._cards
+    }
+
     constructor() {
         this.seedDeck();
     }
