@@ -27,7 +27,6 @@ export const parseCardsQuery = (queryStr: string): Card[] => {
 
     const result: Card[] = [];
     for (let card of cardStrings) {
-        console.log(card);
         let rank: Rank;
         let suit: Suit;
         if (card.length === 3) {
