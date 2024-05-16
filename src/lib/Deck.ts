@@ -23,8 +23,6 @@ export class Deck {
                 }
             }
         }
-
-        this.shuffle();
     }
 
     public printCards() {
@@ -35,7 +33,12 @@ export class Deck {
                 count: card.count(),
             }
         })
-        return JSON.stringify(cards, null, 2);
+
+        const deck = {
+            numCards: this._cards.length,
+            cards,
+        }
+        return JSON.stringify(deck, null, 2);
     }
 
     public shuffle() {
@@ -44,5 +47,11 @@ export class Deck {
             const j = Math.floor(Math.random() * (i + 1));
             [this._cards[i], this._cards[j]] = [this._cards[j], this._cards[i]];
         }
+    }
+
+    public removeCard(rank: Rank, suit: Suit) {
+        this._cards = this._cards.filter((card) => {
+            return card.suit !== suit || card.rank !== rank;
+        })
     }
 }
