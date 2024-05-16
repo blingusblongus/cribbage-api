@@ -1,10 +1,13 @@
 import type { APIRoute } from "astro";
 import { Deck } from "../../lib/Deck";
-import { Rank, Suit } from "../../types/cardTypes";
 
-export const GET: APIRoute = () => {
+export const GET: APIRoute = (context) => {
+    const url = new URL(context.url)
+    const count = Number(url.searchParams.get("count")) || 1;
+
     const deck = new Deck();
-    // deck.shuffle();
-    deck.removeCard(Rank["Ace"], Suit["Spades"])
-    return new Response(JSON.stringify(deck.view()));
+    deck.shuffle();
+
+    const removed = deck.draw(count).map(card => card.print());
+    return new Response(JSON.stringify(removed, null, 2));
 }

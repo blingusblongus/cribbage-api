@@ -48,4 +48,12 @@ export class Deck {
         const idxToRemove = this._cards.findIndex(card => card.suit === suit && card.rank === rank);
         this._removed.push(this._cards.splice(idxToRemove, 1)[0]);
     }
+
+    // TODO: Eventually, this may need to become `drawToHand` or `drawToDiscard`
+    public draw(num: number = 1): Card[] {
+        const drawnCards = this._cards.splice(0, num)
+        this._removed = this._removed.concat(...drawnCards)
+
+        return drawnCards;
+    }
 }
