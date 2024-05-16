@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { Deck } from "../../lib/Deck";
 import { parseCardsQuery } from "../../utils/parseCardsQuery";
 import type { Card } from "../../lib/Card";
+import { getCombinations } from "../../utils/getCombinations";
 
 export const GET: APIRoute = (context) => {
     const url = new URL(context.url)
@@ -11,6 +12,7 @@ export const GET: APIRoute = (context) => {
         return new Response("No cards provided", { status: 400 })
     }
 
+    // Parse Query Params
     let parsedCards: Card[];
     try {
         parsedCards = parseCardsQuery(cards);
@@ -18,13 +20,18 @@ export const GET: APIRoute = (context) => {
         return new Response("Error parsing cards" + err, { status: 400 })
     }
 
-    console.log(parsedCards);
+    // Init Deck
     const deck = new Deck();
 
     // Remove Provided cards from deck
     parsedCards.forEach(({ rank, suit }) => deck.removeCard(rank, suit))
-
     deck.shuffle();
+
+    // Get 4-card combinations
+    const combos = getCombinations(parsedCards, 4);
+
+    return new Response(JSON.stringify(combos, null, 2))
+
 
     return new Response(JSON.stringify(deck.view()));
 }
