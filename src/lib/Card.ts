@@ -1,4 +1,5 @@
-import type { Rank, Suit } from "../types/cardTypes";
+import { Rank, Suit } from "../types/cardTypes";
+import { getEnumKeyByValue } from "../utils/getEnumKeyByValue";
 
 export class Card {
     private _suit: Suit;
@@ -17,5 +18,13 @@ export class Card {
 
     public count(): number {
         return this._rank > 10 ? 10 : this._rank;
+    }
+
+    public print() {
+        return {
+            rank: getEnumKeyByValue(Rank, this._rank),
+            suit: getEnumKeyByValue(Suit, this._suit),
+            count: this.count(),
+        }
     }
 }
