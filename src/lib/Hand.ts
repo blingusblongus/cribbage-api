@@ -52,6 +52,7 @@ export class Hand {
         return {
             total: this._totalScore,
             pairs: this._pairs.length,
+            fifteens: this._fifteens.length,
         }
     }
 
