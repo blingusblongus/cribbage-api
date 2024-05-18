@@ -7,39 +7,38 @@ export class Hand {
     private _fifteens: Card[][] = [];
     private _totalScore: number = 0;
 
+    public get cards() { return this._cards };
+    public get pairs() { return this._pairs };
+    public get fifteens() { return this._fifteens };
+    public get totalScore() { return this._totalScore };
+
     constructor(cards: Card[]) {
         if (cards.length > 5) {
             throw Error("Invalid hand: max 5 cards");
         }
         this._cards = cards;
-        this._totalScore = this.scorePairs();
-        this._totalScore += this.scoreFifteens();
+        this.scoreHand();
     }
 
-    private scorePairs() {
-        let numPairs = 0;
-        for (let [c1, c2] of getCombinations(this._cards, 2)) {
-            if (c1.rank === c2.rank) {
-                numPairs++;
-                this._pairs.push([c1, c2]);
-            }
-        }
-        return numPairs * 2;
-    }
 
-    // TODO: This can be improved by exiting early if over 15
-    private scoreFifteens() {
-        let numFifteens = 0;
-        for (let size = 2; size < 6; ++size) {
+    private scoreHand() {
+        for (let size = 5; size > 0; --size) {
             for (let set of getCombinations(this._cards, size)) {
-                const sum = set.reduce((sum, el) => sum += el.count(), 0);
-                if (sum === 15) {
-                    this._fifteens.push(set);
-                    numFifteens++;
+                if (size > 1) {
+                    // Check Fifteens
+                    if (this.isFifteen(set)) this._fifteens.push(set);
                 }
             }
         }
-        return numFifteens * 2;
+    }
+
+    private isFifteen(combo: Card[]): boolean {
+        let count = 0;
+        for (let i = 0; i < combo.length; ++i) {
+            count += combo[i].count();
+            if (count > 15) return false;
+        }
+        return count === 15;
     }
 
     public get printFull() {
@@ -54,9 +53,5 @@ export class Hand {
             pairs: this._pairs.length,
             fifteens: this._fifteens.length,
         }
-    }
-
-    public get cards() {
-        return this._cards;
     }
 }
