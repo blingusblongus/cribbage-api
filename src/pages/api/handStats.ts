@@ -39,10 +39,9 @@ export const GET: APIRoute = (context) => {
     for (let combo of combos) {
         // Add each potential flip card
         for (let i = 0; i < deck.cards.length; ++i) {
-            const withFlip = [...combo, deck.cards[i]];
-            const hand = new Hand(withFlip);
+            const hand = new Hand(combo, deck.cards[i]);
 
-            const score = hand.printCounts.total;
+            const score = hand.printCounts().total;
             if (scoredHands[score]) {
                 scoredHands[score]++
             } else {

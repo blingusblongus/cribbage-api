@@ -35,7 +35,6 @@ export class Hand {
         this.scoreHand();
     }
 
-
     private scoreHand() {
         for (let size = 5; size > 1; --size) {
             for (let set of getCombinations([...this._cards, this._flipCard], size)) {
@@ -56,17 +55,17 @@ export class Hand {
         return count === 15;
     }
 
-    public get printFull() {
-        return {
+    public printFull() {
+        return Object.freeze({
             total: this._totalScore,
             pairs: this._pairs,
-        }
+        })
     }
-    public get printCounts() {
-        return {
+    public printCounts() {
+        return Object.freeze({
             total: this._totalScore,
             pairs: this._pairs.length,
             fifteens: this._fifteens.length,
-        }
+        })
     }
 }
