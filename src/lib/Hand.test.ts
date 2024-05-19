@@ -109,5 +109,11 @@ describe("Hand Scoring", () => {
             let hand = new Hand(handCards, flipCard);
             expect(hand.totalScore).toBe(6);
         })
+        test("two 15s + pair + 4-card flush = 8", () => {
+            const handCards = parseCardsQuery("10h,3h,2h,6h")
+            const flipCard = parseCardsQuery("10s")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.totalScore).toBe(10);
+        })
     })
 })
