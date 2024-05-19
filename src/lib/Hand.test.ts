@@ -108,5 +108,11 @@ describe("Hand Scoring", () => {
             const hand = handHelper("10h,3h,2h,6h", "10s")
             expect(hand.totalScore).toBe(10);
         })
+        test("run of 3 + 15 + pair = 7", () => {
+            const hand = handHelper("4s,5h,6s,8h", "8c")
+            expect(hand.pairs.length).toBe(1);
+            expect(hand.runPoints).toBe(3);
+            expect(hand.totalScore).toBe(7);
+        })
     })
 })
