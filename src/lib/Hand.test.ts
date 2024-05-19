@@ -3,21 +3,6 @@ import { parseCardsQuery } from "../utils/parseCardsQuery"
 import { Hand } from "./Hand";
 
 describe("Hand Scoring", () => {
-    describe("Pairs", () => {
-        // test("Scores one pair", () => {
-        //     let hand = new Hand(parseCardsQuery("ah,as,3h,4h,jh"));
-        //     expect(hand.printCounts.pairs).toBe(1)
-        // })
-        // test("Scores trips", () => {
-        //     let hand = new Hand(parseCardsQuery("ah,as,ac,4h,jh"));
-        //     expect(hand.printCounts.pairs).toBe(3)
-        // })
-        // test("Scores quads", () => {
-        //     let hand = new Hand(parseCardsQuery("ah,as,ac,ad,jh"));
-        //     expect(hand.printCounts.pairs).toBe(6)
-        // })
-    })
-
     describe("Nibs", () => {
         test("Nibs is true", () => {
             const handCards = parseCardsQuery("ah,as,3h,6h")
@@ -60,6 +45,12 @@ describe("Hand Scoring", () => {
             const flipCard = parseCardsQuery("jh")[0]
             let hand = new Hand(handCards, flipCard);
             expect(hand.fifteens.length).toBe(2);
+        })
+        test("3 instances", () => {
+            const handCards = parseCardsQuery("10h,10s,10c,6h")
+            const flipCard = parseCardsQuery("5h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.fifteens.length).toBe(3);
         })
     })
 })
