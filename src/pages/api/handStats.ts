@@ -35,7 +35,8 @@ export const GET: APIRoute = (context) => {
     const combos = getCombinations(parsedCards, 4);
     for (let combo of combos) {
         collectedResults.push({
-            keep: combo.map(c => c.print()),
+            keep: combo.map(c => c.printReadableStr()),
+            discard: parsedCards.filter(c => !combo.includes(c)).map(c => c.printReadableStr()),
             result: scoreHand(combo),
         });
     }
