@@ -82,8 +82,6 @@ export class Hand {
 
         this._runPoints += this._runs.reduce((sum, el) => sum += el.length, 0);
         this._totalScore += this._runPoints;
-
-        console.log(this._runs)
     }
 
     private isFifteen(combo: Card[]): boolean {

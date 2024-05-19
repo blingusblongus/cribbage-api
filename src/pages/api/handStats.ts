@@ -6,6 +6,7 @@ import { getCombinations } from "../../utils/getCombinations";
 import { Hand } from "../../lib/Hand";
 
 export const GET: APIRoute = (context) => {
+    console.time("start handStats");
     const url = new URL(context.url)
     const cards = url.searchParams.get("cards");
 
@@ -35,7 +36,8 @@ export const GET: APIRoute = (context) => {
     const combos = getCombinations(parsedCards, 4);
 
     // Check each combo (15x46 iterations)
-    const scoredHands: { [key: number]: number } = {};
+    const scoredHands:
+        { [key: number]: { count: number; chance: number; flips: { rank: string; suit: string; count: number; }[] } } = {};
     for (let combo of combos) {
         // Add each potential flip card
         for (let i = 0; i < deck.cards.length; ++i) {
@@ -43,13 +45,20 @@ export const GET: APIRoute = (context) => {
 
             const score = hand.printCounts().total;
             if (scoredHands[score]) {
-                scoredHands[score]++
+                scoredHands[score].count++,
+                    scoredHands[score].flips.push(deck.cards[i].print())
+                scoredHands[score].chance = (scoredHands[score].count / 48) * 100
             } else {
-                scoredHands[score] = 1;
+                scoredHands[score] = {
+                    count: 1,
+                    flips: [deck.cards[i].print()],
+                    chance: 1 / 48,
+                };
             }
         }
     }
 
+    console.timeEnd("start handStats");
     return new Response(JSON.stringify(scoredHands, null, 2))
     // return new Response(JSON.stringify(scoredHands, null, 2))
 
