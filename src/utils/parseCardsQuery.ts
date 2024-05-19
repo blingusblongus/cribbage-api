@@ -27,6 +27,9 @@ export const parseCardsQuery = (queryStr: string): Card[] => {
 
     const result: Card[] = [];
     for (let card of cardStrings) {
+        if (cardStrings.filter(c => c === card).length > 1) {
+            throw new Error("no duplicate cards allowed: " + card)
+        }
         let rank: Rank;
         let suit: Suit;
         if (card.length === 3) {
