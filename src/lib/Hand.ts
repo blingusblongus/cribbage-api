@@ -36,14 +36,27 @@ export class Hand {
     }
 
     private scoreHand() {
+        // Check all combos of 2-5 cards
         for (let size = 5; size > 1; --size) {
             for (let set of getCombinations([...this._cards, this._flipCard], size)) {
                 if (size > 1) {
                     // Check Fifteens
                     if (this.isFifteen(set)) this._fifteens.push(set);
                 }
+                if (size === 2) {
+                    // Check Pairs
+                    if (this.isPair(set)) this._pairs.push(set);
+                }
             }
         }
+
+        // Score Nibs/nobs
+        if (this._nibs) this._totalScore += 2;
+        if (this._nobs) this._totalScore += 1;
+
+        // Score fifteens/pairs
+        this._totalScore += 2 * this._fifteens.length;
+        this._totalScore += 2 * this._pairs.length;
     }
 
     private isFifteen(combo: Card[]): boolean {
@@ -53,6 +66,11 @@ export class Hand {
             if (count > 15) return false;
         }
         return count === 15;
+    }
+
+    private isPair(combo: Card[]): boolean {
+        if (combo.length !== 2) throw Error("isPair must accept two cards")
+        return combo[0].rank === combo[1].rank;
     }
 
     public printFull() {

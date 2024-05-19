@@ -53,4 +53,40 @@ describe("Hand Scoring", () => {
             expect(hand.fifteens.length).toBe(3);
         })
     })
+
+    describe("Pairs", () => {
+        test("1 pair", () => {
+            const handCards = parseCardsQuery("10h,10s,3c,6h")
+            const flipCard = parseCardsQuery("5h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.pairs.length).toBe(1);
+        })
+        test("2 pair", () => {
+            const handCards = parseCardsQuery("10h,10s,3c,6h")
+            const flipCard = parseCardsQuery("3h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.pairs.length).toBe(2);
+        })
+        test("trips", () => {
+            const handCards = parseCardsQuery("10h,10s,10c,6h")
+            const flipCard = parseCardsQuery("3h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.pairs.length).toBe(3);
+        })
+    })
+
+    describe("Combined", () => {
+        test("trips + three 15s = 12", () => {
+            const handCards = parseCardsQuery("10h,10s,10c,6h")
+            const flipCard = parseCardsQuery("5h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.totalScore).toBe(12);
+        })
+        test("two pair + nibs = 6", () => {
+            const handCards = parseCardsQuery("10h,js,10c,6h")
+            const flipCard = parseCardsQuery("jh")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.totalScore).toBe(6);
+        })
+    })
 })
