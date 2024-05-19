@@ -6,7 +6,7 @@ import { getCombinations } from "../../utils/getCombinations";
 import { Hand } from "../../lib/Hand";
 
 export const GET: APIRoute = (context) => {
-    console.time("start handStats");
+    console.time("handsStats");
     const url = new URL(context.url)
     const cards = url.searchParams.get("cards");
 
@@ -58,29 +58,30 @@ export const GET: APIRoute = (context) => {
         }
     }
 
-    let max = 0;
-    let min = Infinity;
-    let total = 0;
-    let count = 0;
-    for (let s in scoredHands) {
-        const score = Number(s);
-        if (score > max) max = score;
-        if (score < min) min = score;
-        total += score;
-        count++;
-    }
+    const scores = Object.keys(scoredHands)
+        .map(key => Number(key))
+        .sort((a, b) => a - b);
+    const max = Math.max(...scores);
+    const min = Math.min(...scores);
+    const total = scores.reduce((sum, el) => sum += el, 0);
+    const count = scores.length;
+    const mean = total / count;
+
+    const middle = Math.floor(scores.length / 2);
+    const median = scores.length % 2 === 0 ? (scores[middle - 1] + scores[middle]) / 2 : scores[middle];
+
+    const variance = scores.reduce((acc, score) => acc + (score - mean) ** 2, 0) / scores.length;
+    const standardDeviation = Math.sqrt(variance);
 
     const result = {
-        avg: total / count,
         max,
         min,
+        mean,
+        median,
+        standardDeviation,
         scoringOptions: scoredHands,
     }
 
-    console.timeEnd("start handStats");
+    console.timeEnd("handsStats");
     return new Response(JSON.stringify(result, null, 2))
-    // return new Response(JSON.stringify(scoredHands, null, 2))
-
-
-    return new Response(JSON.stringify(deck.view()));
 }
