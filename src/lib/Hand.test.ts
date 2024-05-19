@@ -76,6 +76,25 @@ describe("Hand Scoring", () => {
         })
     })
 
+    describe("Run", () => {
+        test("3-card run", () => {
+            const hand = handHelper("8h,9h,10c,ac", "3s")
+            expect(hand.runPoints).toBe(3)
+        })
+        test("4-card run", () => {
+            const hand = handHelper("kh,qh,jc,10c", "8s")
+            expect(hand.runPoints).toBe(4)
+        })
+        test("5-card run", () => {
+            const hand = handHelper("kh,qh,jc,10c", "9s")
+            expect(hand.runPoints).toBe(5)
+        })
+        test("no run", () => {
+            const hand = handHelper("kh,3h,jc,10c", "8s")
+            expect(hand.runPoints).toBe(0)
+        })
+    })
+
     describe("Combined", () => {
         test("trips + three 15s = 12", () => {
             const hand = handHelper("10h,10s,10c,6h", "5h")

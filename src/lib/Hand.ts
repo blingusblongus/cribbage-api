@@ -8,10 +8,12 @@ export class Hand {
     private _fifteens: Card[][] = [];
     private _totalScore: number = 0;
     private _flipCard: Card;
+    private _runs: Card[][] = [];
 
     private _nibs: boolean;
     private _nobs: boolean;
     private _flushPoints = 0;
+    private _runPoints = 0;
 
     public get cards() { return this._cards };
     public get pairs() { return this._pairs };
@@ -20,6 +22,7 @@ export class Hand {
     public get nibs() { return this._nibs };
     public get nobs() { return this._nobs };
     public get flushPoints() { return this._flushPoints };
+    public get runPoints() { return this._runPoints };
 
     constructor(cards: Card[], flip: Card) {
         if (cards.length > 4) {
@@ -61,6 +64,9 @@ export class Hand {
                     // Check Pairs
                     if (this.isPair(set)) this._pairs.push(set);
                 }
+                if (size >= 3) {
+                    if (this.isDistinctRun(set)) this._runs.push(set);
+                }
             }
         }
 
@@ -74,6 +80,10 @@ export class Hand {
 
         this._totalScore += this._flushPoints;
 
+        this._runPoints += this._runs.reduce((sum, el) => sum += el.length, 0);
+        this._totalScore += this._runPoints;
+
+        console.log(this._runs)
     }
 
     private isFifteen(combo: Card[]): boolean {
@@ -88,6 +98,32 @@ export class Hand {
     private isPair(combo: Card[]): boolean {
         if (combo.length !== 2) throw Error("isPair must accept two cards")
         return combo[0].rank === combo[1].rank;
+    }
+
+    private isRun(combo: Card[]): boolean {
+        if (combo.length < 3) throw Error("isRun must accept 3 or more cards");
+
+        const values = combo
+            .map(card => card.rank)
+            .sort((a, b) => a - b);
+
+        for (let i = 0; i < values.length - 1; ++i) {
+            if (values[i] + 1 !== values[i + 1]) return false;
+        }
+        return true;
+    }
+
+    private isDistinctRun(combo: Card[]): boolean {
+        if (!this.isRun(combo)) return false;
+
+        for (let run of this._runs) {
+            for (let card of combo) {
+                if (run.find(c => card.rank === c.rank && card.suit === c.suit)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public printFull() {
