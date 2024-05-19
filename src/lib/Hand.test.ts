@@ -75,6 +75,27 @@ describe("Hand Scoring", () => {
         })
     })
 
+    describe("Flush", () => {
+        test("4-card flush", () => {
+            const handCards = parseCardsQuery("ah,3h,5h,6h")
+            const flipCard = parseCardsQuery("8s")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.flushPoints).toBe(4);
+        })
+        test("5-card flush", () => {
+            const handCards = parseCardsQuery("ah,3h,5h,6h")
+            const flipCard = parseCardsQuery("8h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.flushPoints).toBe(5);
+        })
+        test("no flush", () => {
+            const handCards = parseCardsQuery("as,3h,5h,6h")
+            const flipCard = parseCardsQuery("8h")[0]
+            let hand = new Hand(handCards, flipCard);
+            expect(hand.flushPoints).toBe(0);
+        })
+    })
+
     describe("Combined", () => {
         test("trips + three 15s = 12", () => {
             const handCards = parseCardsQuery("10h,10s,10c,6h")

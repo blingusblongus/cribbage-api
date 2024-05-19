@@ -11,6 +11,7 @@ export class Hand {
 
     private _nibs: boolean;
     private _nobs: boolean;
+    private _flushPoints = 0;
 
     public get cards() { return this._cards };
     public get pairs() { return this._pairs };
@@ -18,6 +19,7 @@ export class Hand {
     public get totalScore() { return this._totalScore };
     public get nibs() { return this._nibs };
     public get nobs() { return this._nobs };
+    public get flushPoints() { return this._flushPoints };
 
     constructor(cards: Card[], flip: Card) {
         if (cards.length > 4) {
@@ -32,6 +34,18 @@ export class Hand {
             return card.rank === Rank.Jack && card.suit === this._flipCard.suit
         });
 
+        // Flush
+        if (this._cards.filter(card => {
+            return card.suit === this._cards[0].suit;
+        }).length === 4) {
+            this._flushPoints += 4;
+        }
+
+        // 5-card flush
+        if (this._flushPoints === 4 &&
+            (this._flipCard.suit === this._cards[0].suit)) {
+            this._flushPoints += 1;
+        }
         this.scoreHand();
     }
 
@@ -57,6 +71,9 @@ export class Hand {
         // Score fifteens/pairs
         this._totalScore += 2 * this._fifteens.length;
         this._totalScore += 2 * this._pairs.length;
+
+        this._totalScore += this._flushPoints;
+
     }
 
     private isFifteen(combo: Card[]): boolean {
