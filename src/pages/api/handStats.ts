@@ -58,8 +58,27 @@ export const GET: APIRoute = (context) => {
         }
     }
 
+    let max = 0;
+    let min = Infinity;
+    let total = 0;
+    let count = 0;
+    for (let s in scoredHands) {
+        const score = Number(s);
+        if (score > max) max = score;
+        if (score < min) min = score;
+        total += score;
+        count++;
+    }
+
+    const result = {
+        avg: total / count,
+        max,
+        min,
+        scoringOptions: scoredHands,
+    }
+
     console.timeEnd("start handStats");
-    return new Response(JSON.stringify(scoredHands, null, 2))
+    return new Response(JSON.stringify(result, null, 2))
     // return new Response(JSON.stringify(scoredHands, null, 2))
 
 
