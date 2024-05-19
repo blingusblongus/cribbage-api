@@ -34,10 +34,12 @@ export const GET: APIRoute = (context) => {
     // Get 4-card combinations
     const combos = getCombinations(parsedCards, 4);
     for (let combo of combos) {
+        const discard = parsedCards.filter(c => !combo.includes(c))
+
         collectedResults.push({
             keep: combo.map(c => c.printReadableStr()),
-            discard: parsedCards.filter(c => !combo.includes(c)).map(c => c.printReadableStr()),
-            result: scoreHand(combo),
+            discard: discard.map(c => c.printReadableStr()),
+            result: scoreHand(combo, discard),
         });
     }
 

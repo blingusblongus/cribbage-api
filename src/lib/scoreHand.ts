@@ -2,12 +2,13 @@ import { Card } from "./Card"
 import { Deck } from "./Deck"
 import { Hand } from "./Hand";
 
-export const scoreHand = (cards: Card[]) => {
+export const scoreHand = (cards: Card[], discardedCards: Card[] = []) => {
     // Init Deck
     const deck = new Deck();
 
     // Remove Provided cards from deck
     cards.forEach(({ rank, suit }) => deck.removeCard(rank, suit))
+    discardedCards.forEach(({ rank, suit }) => deck.removeCard(rank, suit))
 
     // Check each combo (15x46 iterations)
     const scoredHands:

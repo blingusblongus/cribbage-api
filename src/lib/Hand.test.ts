@@ -9,17 +9,6 @@ const handHelper = (handStr: string, flipStr: string) => {
 }
 
 describe("Hand Scoring", () => {
-    describe("Nibs", () => {
-        test("Nibs is true", () => {
-            const hand = handHelper("ah,as,3h,6h", "jh")
-            expect(hand.nibs).toBe(true);
-        })
-        test("Nibs is false", () => {
-            const hand = handHelper("ah,jh,3h,6h", "10h")
-            expect(hand.nibs).toBe(false);
-        })
-    })
-
     describe("Nobs", () => {
         test("Nobs is true", () => {
             const hand = handHelper("ah,as,3h,jh", "6h")
@@ -100,10 +89,6 @@ describe("Hand Scoring", () => {
             const hand = handHelper("10h,10s,10c,6h", "5h")
             expect(hand.totalScore).toBe(12);
         })
-        test("two pair + nibs = 6", () => {
-            const hand = handHelper("10h,js,10c,6h", "jh")
-            expect(hand.totalScore).toBe(6);
-        })
         test("two 15s + pair + 4-card flush = 8", () => {
             const hand = handHelper("10h,3h,2h,6h", "10s")
             expect(hand.totalScore).toBe(10);
@@ -113,6 +98,10 @@ describe("Hand Scoring", () => {
             expect(hand.pairs.length).toBe(1);
             expect(hand.runPoints).toBe(3);
             expect(hand.totalScore).toBe(7);
+        })
+        test("29 hand", () => {
+            const hand = handHelper("5d,5s,5h,jc", "5c")
+            expect(hand.totalScore).toBe(29);
         })
     })
 })

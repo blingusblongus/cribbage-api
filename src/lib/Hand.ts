@@ -10,7 +10,6 @@ export class Hand {
     private _flipCard: Card;
     private _runs: Card[][] = [];
 
-    private _nibs: boolean;
     private _nobs: boolean;
     private _flushPoints = 0;
     private _runPoints = 0;
@@ -19,7 +18,6 @@ export class Hand {
     public get pairs() { return this._pairs };
     public get fifteens() { return this._fifteens };
     public get totalScore() { return this._totalScore };
-    public get nibs() { return this._nibs };
     public get nobs() { return this._nobs };
     public get flushPoints() { return this._flushPoints };
     public get runPoints() { return this._runPoints };
@@ -31,9 +29,7 @@ export class Hand {
         this._cards = cards;
         this._flipCard = flip;
 
-        this._nibs = this._flipCard.rank === Rank.Jack;
-
-        this._nobs = !this._nibs && !!this._cards.find(card => {
+        this._nobs = !!this._cards.find(card => {
             return card.rank === Rank.Jack && card.suit === this._flipCard.suit
         });
 
@@ -70,8 +66,7 @@ export class Hand {
             }
         }
 
-        // Score Nibs/nobs
-        if (this._nibs) this._totalScore += 2;
+        // Nobs
         if (this._nobs) this._totalScore += 1;
 
         // Score fifteens/pairs
@@ -126,8 +121,15 @@ export class Hand {
 
     public printFull() {
         return Object.freeze({
+            totalScore: this._totalScore,
+            cards: this._cards,
+            flipCard: this._flipCard,
             total: this._totalScore,
             pairs: this._pairs,
+            fifteens: this._fifteens,
+            flushPoints: this._flushPoints,
+            runs: this._runs,
+            nobs: this._nobs,
         })
     }
     public printCounts() {
