@@ -1,9 +1,7 @@
 import type { APIRoute } from "astro";
-import { Deck } from "../../lib/Deck";
 import { parseCardsQuery } from "../../utils/parseCardsQuery";
 import type { Card } from "../../lib/Card";
 import { getCombinations } from "../../utils/getCombinations";
-import { Hand } from "../../lib/Hand";
 import { scoreHand } from "../../lib/scoreHand";
 
 export const GET: APIRoute = (context) => {
@@ -41,7 +39,6 @@ export const GET: APIRoute = (context) => {
             result: scoreHand(combo),
         });
     }
-
 
     const result = collectedResults.sort((a, b) => b.result.mean - a.result.mean)
 

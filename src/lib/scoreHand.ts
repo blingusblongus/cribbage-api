@@ -11,7 +11,7 @@ export const scoreHand = (cards: Card[]) => {
 
     // Check each combo (15x46 iterations)
     const scoredHands:
-        { [key: number]: { count: number; chance: number; flips: { rank: string; suit: string; count: number; }[] } } = {};
+        { [key: number]: { count: number; chance: number; flips: string[] } } = {};
 
     // Add each potential flip card
     for (let i = 0; i < deck.cards.length; ++i) {
@@ -20,12 +20,12 @@ export const scoreHand = (cards: Card[]) => {
         const score = hand.printCounts().total;
         if (scoredHands[score]) {
             scoredHands[score].count++,
-                scoredHands[score].flips.push(deck.cards[i].print())
+                scoredHands[score].flips.push(deck.cards[i].printReadableStr())
             scoredHands[score].chance = (scoredHands[score].count / 48) * 100
         } else {
             scoredHands[score] = {
                 count: 1,
-                flips: [deck.cards[i].print()],
+                flips: [deck.cards[i].printReadableStr()],
                 chance: 1 / 48,
             };
         }

@@ -27,4 +27,7 @@ export class Card {
             count: this.count(),
         }
     }
+    public printReadableStr() {
+        return `${getEnumKeyByValue(Rank, this._rank)} of ${getEnumKeyByValue(Suit, this._suit)}`
+    }
 }
