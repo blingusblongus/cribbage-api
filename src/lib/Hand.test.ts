@@ -82,9 +82,17 @@ describe("Hand Scoring", () => {
             const hand = handHelper("kh,3h,jc,10c", "8s")
             expect(hand.runPoints).toBe(0)
         })
+        test("double run", () => {
+            const hand = handHelper("js,qh,qs,kh", "2h")
+            expect(hand.totalScore).toBe(8);
+        })
     })
 
     describe("Combined", () => {
+        test("double run + 2x15", () => {
+            const hand = handHelper("3c,4s,5c,10d", "5h")
+            expect(hand.totalScore).toBe(12);
+        })
         test("trips + three 15s = 12", () => {
             const hand = handHelper("10h,10s,10c,6h", "5h")
             expect(hand.totalScore).toBe(12);

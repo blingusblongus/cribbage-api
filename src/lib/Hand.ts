@@ -103,6 +103,7 @@ export class Hand {
         for (let i = 0; i < values.length - 1; ++i) {
             if (values[i] + 1 !== values[i + 1]) return false;
         }
+
         return true;
     }
 
@@ -110,9 +111,11 @@ export class Hand {
         if (!this.isRun(combo)) return false;
 
         for (let run of this._runs) {
+            let countMatch = 0;
             for (let card of combo) {
                 if (run.find(c => card.rank === c.rank && card.suit === c.suit)) {
-                    return false;
+                    countMatch++;
+                    if (countMatch === combo.length) return false;
                 }
             }
         }
