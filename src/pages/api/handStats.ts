@@ -5,46 +5,46 @@ import { getCombinations } from "../../utils/getCombinations";
 import { scoreHand } from "../../lib/scoreHand";
 
 export const GET: APIRoute = (context) => {
-    console.time("handsStats");
-    const url = new URL(context.url)
-    const cards = url.searchParams.get("cards");
+  console.time("handsStats");
+  const url = new URL(context.url);
+  const cards = url.searchParams.get("cards");
 
-    if (!cards) {
-        return new Response("No cards provided", { status: 400 })
-    }
+  if (!cards) {
+    return new Response("No cards provided", { status: 400 });
+  }
 
-    // Parse Query Params
-    let parsedCards: Card[];
-    try {
-        parsedCards = parseCardsQuery(cards);
-    } catch (err) {
-        return new Response("Error parsing cards" + err, { status: 400 })
-    }
+  // Parse Query Params
+  let parsedCards: Card[];
+  try {
+    parsedCards = parseCardsQuery(cards);
+  } catch (err) {
+    return new Response("Error parsing cards" + err, { status: 400 });
+  }
 
-    if (parsedCards.length > 6) {
-        return new Response("Hand size is limited to 6", { status: 400 })
-    }
+  if (parsedCards.length > 6) {
+    return new Response("Hand size is limited to 6", { status: 400 });
+  }
 
-    if (parsedCards.length === 4) {
-        return new Response(JSON.stringify(scoreHand(parsedCards), null, 2))
-    }
+  if (parsedCards.length === 4) {
+    return new Response(JSON.stringify(scoreHand(parsedCards), null, 2));
+  }
 
-    const collectedResults = [];
+  const collectedResults = [];
 
-    // Get 4-card combinations
-    const combos = getCombinations(parsedCards, 4);
-    for (let combo of combos) {
-        const discard = parsedCards.filter(c => !combo.includes(c))
+  // Get 4-card combinations
+  const combos = getCombinations(parsedCards, 4);
+  for (let combo of combos) {
+    const discard = parsedCards.filter((c) => !combo.includes(c));
 
-        collectedResults.push({
-            keep: combo.map(c => c.printReadableStr()),
-            discard: discard.map(c => c.printReadableStr()),
-            result: scoreHand(combo, discard),
-        });
-    }
+    collectedResults.push({
+      keep: combo.map((c) => c.printReadableStr()),
+      discard: discard.map((c) => c.printReadableStr()),
+      result: scoreHand(combo, discard),
+    });
+  }
 
-    const result = collectedResults.sort((a, b) => b.result.mean - a.result.mean)
+  const result = collectedResults.sort((a, b) => b.result.mean - a.result.mean);
 
-    console.timeEnd("handsStats");
-    return new Response(JSON.stringify(result, null, 2))
-}
+  console.timeEnd("handsStats");
+  return new Response(JSON.stringify(result, null, 2));
+};
