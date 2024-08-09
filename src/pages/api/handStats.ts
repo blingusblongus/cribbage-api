@@ -53,7 +53,7 @@ export const GET: APIRoute = (context) => {
   }
 
   let result = collectedResults.sort((a, b) => {
-    if (sort && Object.keys(a).includes(sort)) {
+    if (sort && b.result[sort] !== undefined && a.result[sort] !== undefined) {
       return b.result[sort] - a.result[sort];
     }
     return b.result.mean - a.result.mean;
