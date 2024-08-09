@@ -4,6 +4,13 @@ import type { Card } from "../../lib/Card";
 import { getCombinations } from "../../utils/getCombinations";
 import { scoreHand } from "../../lib/scoreHand";
 
+const SORTABLE = ["mean", "max", "min"] as const;
+const isSortable = (
+  value: string | null,
+): value is (typeof SORTABLE)[number] => {
+  return SORTABLE.includes(value as (typeof SORTABLE)[number]);
+};
+
 export const GET: APIRoute = (context) => {
   console.time("handsStats");
   const url = new URL(context.url);
@@ -36,6 +43,8 @@ export const GET: APIRoute = (context) => {
     discard: string[];
     result: {
       mean: number;
+      max: number;
+      min: number;
       scoringOptions: { [key: number]: { flips?: string[] } };
     };
   }[] = [];
@@ -53,7 +62,7 @@ export const GET: APIRoute = (context) => {
   }
 
   let result = collectedResults.sort((a, b) => {
-    if (sort && b.result[sort] !== undefined && a.result[sort] !== undefined) {
+    if (isSortable(sort)) {
       return b.result[sort] - a.result[sort];
     }
     return b.result.mean - a.result.mean;
