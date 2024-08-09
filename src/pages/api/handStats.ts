@@ -8,6 +8,8 @@ export const GET: APIRoute = (context) => {
   console.time("handsStats");
   const url = new URL(context.url);
   const cards = url.searchParams.get("cards");
+  const detail = url.searchParams.get("detail")?.split(",");
+  const sort = url.searchParams.get("sort");
 
   if (!cards) {
     return new Response("No cards provided", { status: 400 });
@@ -29,7 +31,14 @@ export const GET: APIRoute = (context) => {
     return new Response(JSON.stringify(scoreHand(parsedCards), null, 2));
   }
 
-  const collectedResults = [];
+  const collectedResults: {
+    keep: string[];
+    discard: string[];
+    result: {
+      mean: number;
+      scoringOptions: { [key: number]: { flips?: string[] } };
+    };
+  }[] = [];
 
   // Get 4-card combinations
   const combos = getCombinations(parsedCards, 4);
@@ -43,7 +52,24 @@ export const GET: APIRoute = (context) => {
     });
   }
 
-  const result = collectedResults.sort((a, b) => b.result.mean - a.result.mean);
+  let result = collectedResults.sort((a, b) => {
+    if (sort && Object.keys(a).includes(sort)) {
+      return b.result[sort] - a.result[sort];
+    }
+    return b.result.mean - a.result.mean;
+  });
+
+  if (!detail?.includes("all")) {
+    result = [result[0]];
+  }
+
+  if (!detail?.includes("flips")) {
+    result.forEach((el) => {
+      for (let opt in el.result.scoringOptions) {
+        delete el.result.scoringOptions[opt].flips;
+      }
+    });
+  }
 
   console.timeEnd("handsStats");
   return new Response(JSON.stringify(result, null, 2));
