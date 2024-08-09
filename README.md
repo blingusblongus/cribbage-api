@@ -8,7 +8,7 @@ QueryParams:
 - `detail`: Comma-separated strings representing the level of details to return.
   - `all` - returns all possible hands, instead of just the best
   - `flips` - for each scoring option, lists the flip cards that would result in this score
-- sort: specify a sorting option (`mean` (default), `max`, `min`, `median`);
+- sort: specify a sorting option (`mean` (default), `max`, `min`);
 
 ```bash
 curl -G "https://cribbage-api.vercel.app/api/handStats" \

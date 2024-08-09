@@ -37,15 +37,19 @@ export const scoreHand = (cards: Card[], discardedCards: Card[] = []) => {
     .sort((a, b) => a - b);
   const max = Math.max(...scores);
   const min = Math.min(...scores);
-  const total = scores.reduce((sum, el) => (sum += el), 0);
-  const count = scores.length;
+  const total = scores.reduce(
+    (sum, score) => (sum += score * scoredHands[score].count),
+    0,
+  );
+  const count = 52 - cards.length; // we'll count flips for all possible cards not specified in the hand
   const mean = total / count;
 
-  const middle = Math.floor(scores.length / 2);
-  const median =
-    scores.length % 2 === 0
-      ? (scores[middle - 1] + scores[middle]) / 2
-      : scores[middle];
+  // TODO: fix median, it's not weighted by the counts of the scores
+  // const middle = Math.floor(scores.length / 2);
+  // const median =
+  //   scores.length % 2 === 0
+  //     ? (scores[middle - 1] + scores[middle]) / 2
+  //     : scores[middle];
 
   const variance =
     scores.reduce((acc, score) => acc + (score - mean) ** 2, 0) / scores.length;
@@ -55,7 +59,7 @@ export const scoreHand = (cards: Card[], discardedCards: Card[] = []) => {
     max,
     min,
     mean,
-    median,
+    // median,
     standardDeviation,
     scoringOptions: scoredHands,
   };
